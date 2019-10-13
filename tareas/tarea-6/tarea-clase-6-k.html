@@ -1,0 +1,142 @@
+<!--
+TAREA: Empezar preguntando cuánta gente hay en el grupo familiar.
+Crear tantos inputs+labels como gente haya para completar la edad de cada integrante.
+Al hacer click en "calcular", mostrar en un elemento pre-existente la mayor edad, la menor edad y el promedio del grupo familiar.
+
+Punto bonus: Crear un botón para "empezar de nuevo" que empiece el proceso nuevamente, borrando los inputs ya creados (investigar cómo en MDN).
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>K</title>
+</head>
+<style>
+    .botones{
+        display: flex;
+        justify-content: center;
+    }
+    .botones > input{
+        margin: 10px;
+    }
+    #divisores{
+        display: flex;
+    }
+    #todo{
+        text-align:center;
+        float: right;
+    }
+    .Datos{
+        float: left;
+    }
+    ul > *{
+        justify-content: center;
+        text-align:center
+    }
+</style>
+<body>
+    <div id="divisor">
+        <div class="Datos">
+            <h1>El mas Grande: </h1>
+            <h2>El promedio es :</h2>
+            <h3>El mas chico: </h3>
+        </div>
+        <form id="todo">
+            <ul id="#formulario">
+                <label>Integrantes de la family</label>
+                <input id="#family" type="number" min ="0">
+            </ul>
+        <div class="botones">
+            <input type="button" id="submit" value="Calcular">
+            <input type="button" id="delete-this" value="Borra todo">
+        </div>
+        </form>
+    </div>
+</body>
+<script>
+    let cantidadVieja = 0;
+    let cantidadActual = 0;
+    const integrantes = document.getElementById("#family");
+    const borrarTodo = document.getElementById("delete-this");
+    const calcular = document.getElementById("submit"); 
+    borrarTodo.addEventListener("click",function(e){
+        let i = 0;
+        while(cantidadActual>=i){ 
+                del();
+                cantidadActual--;
+        }
+        integrantes.value = 0;
+        modify_data("","","");
+    })
+    integrantes.addEventListener("change",function(e){
+        cantidadActual = integrantes.value;
+        if(cantidadActual>cantidadVieja){
+            while(cantidadVieja!=cantidadActual){ 
+                add();
+                cantidadVieja++;
+            }
+        }else{
+            while(cantidadVieja!=cantidadActual){ 
+                del();
+                cantidadVieja--;
+            }
+        } 
+    })
+
+    function add(){
+        const l = document.createElement("label");
+        const text = document.createTextNode("Edad del tipo");
+        l.appendChild(text);
+        l.style = "display:block";
+        const i = document.createElement("input");
+        i.style = "display:block , justify-content: center";
+        i.className = "edades";
+        i.type = "number";
+        document.getElementById("#formulario").appendChild(l);
+        document.getElementById("#formulario").appendChild(i);
+    }
+    function del(){
+        const e = document.getElementById("#formulario"); 
+        if(e.children.length>2){
+            e.removeChild(e.lastChild);
+            e.removeChild(e.lastChild);
+        }
+    }
+
+    calcular.addEventListener("click",function(e){
+        const total = document.getElementsByClassName("edades");
+        let suma = 0;
+        let min = 9999;
+        let max = 0;
+        let ti = 0;
+        for(let i = 0 ; i<total.length;i++){ 
+            ti = Number(total[i].value);
+            if(total[i].value <= 0 || total[i].value > 200){
+                alert("Dato Invalido");
+                return 0;
+            }
+            suma += ti;
+            if(ti>max){
+                max = ti;
+            }
+            if(ti<min){
+                min = ti;
+            }
+        }
+        const prom = suma/total.length;
+        modify_data(max,prom,min);
+    });
+
+    function modify_data(max,prom,min){
+        const grande = document.querySelector('h1');
+        grande.innerHTML = `El mas Grande: ${max}`;
+        const promedio = document.querySelector('h2');
+        promedio.innerHTML = `El promedio es : ${prom}`;
+        const chico = document.querySelector('h3');
+        chico.innerHTML = `El mas chico : ${min}`;
+    }
+</script>
+</html>
