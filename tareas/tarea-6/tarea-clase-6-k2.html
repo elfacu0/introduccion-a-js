@@ -1,9 +1,9 @@
 <!--
-TAREA: Empezar preguntando cuánta gente hay en el grupo familiar.
-Crear tantos inputs+labels como gente haya para completar la edad de cada integrante.
-Al hacer click en "calcular", mostrar en un elemento pre-existente la mayor edad, la menor edad y el promedio del grupo familiar.
+TAREA:
+Crear una interfaz que permita agregar ó quitar (botones agregar y quitar) inputs+labels para completar el salario anual de cada integrante de la familia que trabaje.
+Al hacer click en "calcular", mostrar en un elemento pre-existente el mayor salario anual, menor salario anual, salario anual promedio y salario mensual promedio.
 
-Punto bonus: Crear un botón para "empezar de nuevo" que empiece el proceso nuevamente, borrando los inputs ya creados (investigar cómo en MDN).
+Punto bonus: si hay inputs vacíos, ignorarlos en el cálculo (no contarlos como 0).
 -->
 
 <!DOCTYPE html>
@@ -40,9 +40,10 @@ Punto bonus: Crear un botón para "empezar de nuevo" que empiece el proceso nuev
 <body>
     <div id="divisor">
         <div class="Datos">
-            <h1>El mas Grande: </h1>
-            <h2>El promedio es :</h2>
-            <h3>El mas chico: </h3>
+            <h1>El que mas gana: </h1>
+            <h2>El promedio anul es : </h2>
+            <h2>El promedio mensual es : </h2>
+            <h3>El que menos gana: </h3>
         </div>
         <form id="todo">
             <ul id="#formulario">
@@ -88,7 +89,7 @@ Punto bonus: Crear un botón para "empezar de nuevo" que empiece el proceso nuev
 
     function add(){
         const l = document.createElement("label");
-        const text = document.createTextNode("Edad del tipo");
+        const text = document.createTextNode("Cuanto gana anual?");
         l.appendChild(text);
         l.style = "display:block";
         const i = document.createElement("input");
@@ -112,31 +113,37 @@ Punto bonus: Crear un botón para "empezar de nuevo" que empiece el proceso nuev
         let min = 9999;
         let max = 0;
         let ti = 0;
+        let validos = 0;
         for(let i = 0 ; i<total.length;i++){ 
             ti = Number(total[i].value);
-            if(total[i].value <= 0 || total[i].value > 200){
-                alert("Dato Invalido");
-                return 0;
-            }
-            suma += ti;
-            if(ti>max){
-                max = ti;
-            }
-            if(ti<min){
-                min = ti;
+            if(ti>0){
+                suma += ti;
+                if(ti>max){
+                    max = ti;
+                }
+                if(ti<min){
+                    min = ti;
+                }
+                validos++;
             }
         }
-        const prom = suma/total.length;
-        modify_data(max,prom,min);
+        if(validos>=1){
+            const prom = suma/validos;
+            modify_data(max,prom,min);
+        }else{
+            alert("completa algun campo capo");
+        }
     });
 
     function modify_data(max,prom,min){
         const grande = document.querySelector('h1');
-        grande.innerHTML = `El mas Grande: ${max}`;
-        const promedio = document.querySelector('h2');
-        promedio.innerHTML = `El promedio es : ${prom}`;
+        grande.innerHTML = `El que mas gana: $${max}`;
+        const promedio = document.querySelectorAll('h2');
+        promedio[0].innerHTML = `El promedio anual : $${prom}`;
+        const promedio2 = document.querySelectorAll('h2');
+        promedio2[1].innerHTML = `El promedio mensual es : $${prom/12}`;
         const chico = document.querySelector('h3');
-        chico.innerHTML = `El mas chico : ${min}`;
+        chico.innerHTML = `El mas chico : $${min}`;
     }
 </script>
 </html>
