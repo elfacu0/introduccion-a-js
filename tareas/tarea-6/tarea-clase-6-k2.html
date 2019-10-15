@@ -64,8 +64,7 @@ Punto bonus: si hay inputs vacíos, ignorarlos en el cálculo (no contarlos como
     const borrarTodo = document.getElementById("deleteAll");
     const calcular = document.getElementById("submit"); 
     borrarTodo.addEventListener("click",function(e){
-        let i = 0;
-        while(cantidadActual>=i){ 
+        while(cantidadActual>=0){ 
                 deleteFamilyMember();
                 cantidadActual--;
         }
