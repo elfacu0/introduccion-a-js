@@ -29,7 +29,7 @@ Punto bonus: si hay inputs vacíos, ignorarlos en el cálculo (no contarlos como
         text-align:center;
         float: right;
     }
-    .Datos{
+    .datos{
         float: left;
     }
     ul > *{
@@ -39,20 +39,20 @@ Punto bonus: si hay inputs vacíos, ignorarlos en el cálculo (no contarlos como
 </style>
 <body>
     <div id="divisor">
-        <div class="Datos">
+        <div class="datos">
             <h1>El que mas gana: </h1>
-            <h2>El promedio anul es : </h2>
+            <h2>El promedio anual es : </h2>
             <h2>El promedio mensual es : </h2>
             <h3>El que menos gana: </h3>
         </div>
         <form id="todo">
-            <ul id="#formulario">
-                <label>Integrantes de la family</label>
-                <input id="#family" type="number" min ="0">
+            <ul id="formulario">
+                <label>Integrantes de la familia</label>
+                <input id="family" type="number" min ="0">
             </ul>
         <div class="botones">
             <input type="button" id="submit" value="Calcular">
-            <input type="button" id="delete-this" value="Borra todo">
+            <input type="button" id="deleteAll" value="Borra todo">
         </div>
         </form>
     </div>
@@ -60,8 +60,8 @@ Punto bonus: si hay inputs vacíos, ignorarlos en el cálculo (no contarlos como
 <script>
     let cantidadVieja = 0;
     let cantidadActual = 0;
-    const integrantes = document.getElementById("#family");
-    const borrarTodo = document.getElementById("delete-this");
+    const integrantes = document.getElementById("family");
+    const borrarTodo = document.getElementById("deleteAll");
     const calcular = document.getElementById("submit"); 
     borrarTodo.addEventListener("click",function(e){
         let i = 0;
@@ -70,7 +70,7 @@ Punto bonus: si hay inputs vacíos, ignorarlos en el cálculo (no contarlos como
                 cantidadActual--;
         }
         integrantes.value = 0;
-        modify_data("","","");
+        modifyData("","","");
     })
     integrantes.addEventListener("change",function(e){
         cantidadActual = integrantes.value;
@@ -88,6 +88,11 @@ Punto bonus: si hay inputs vacíos, ignorarlos en el cálculo (no contarlos como
     })
 
     function add(){
+        const div = document.createElement("div");
+        div.className = "datos-personas"
+        const formulario = document.getElementById("formulario");
+        formulario.appendChild(div);
+        const pushData = document.getElementsByClassName("datos-personas");
         const l = document.createElement("label");
         const text = document.createTextNode("Cuanto gana anual?");
         l.appendChild(text);
@@ -96,13 +101,12 @@ Punto bonus: si hay inputs vacíos, ignorarlos en el cálculo (no contarlos como
         i.style = "display:block , justify-content: center";
         i.className = "edades";
         i.type = "number";
-        document.getElementById("#formulario").appendChild(l);
-        document.getElementById("#formulario").appendChild(i);
+        pushData[pushData.length-1].appendChild(l);
+        pushData[pushData.length-1].appendChild(i);
     }
     function del(){
-        const e = document.getElementById("#formulario"); 
-        if(e.children.length>2){
-            e.removeChild(e.lastChild);
+        const e = document.getElementById("formulario"); 
+        if(e.children.length>1){
             e.removeChild(e.lastChild);
         }
     }
@@ -110,18 +114,17 @@ Punto bonus: si hay inputs vacíos, ignorarlos en el cálculo (no contarlos como
     calcular.addEventListener("click",function(e){
         const total = document.getElementsByClassName("edades");
         let suma = 0;
-        let min = 9999;
+        let min = null;
         let max = 0;
-        let ti = 0;
         let validos = 0;
         for(let i = 0 ; i<total.length;i++){ 
-            ti = Number(total[i].value);
+            let ti = Number(total[i].value);
             if(ti>0){
                 suma += ti;
                 if(ti>max){
                     max = ti;
                 }
-                if(ti<min){
+                if(ti<min || min==null){
                     min = ti;
                 }
                 validos++;
@@ -129,13 +132,13 @@ Punto bonus: si hay inputs vacíos, ignorarlos en el cálculo (no contarlos como
         }
         if(validos>=1){
             const prom = suma/validos;
-            modify_data(max,prom,min);
+            modifyData(max,prom,min);
         }else{
             alert("completa algun campo capo");
         }
     });
 
-    function modify_data(max,prom,min){
+    function modifyData(max,prom,min){
         const grande = document.querySelector('h1');
         grande.innerHTML = `El que mas gana: $${max}`;
         const promedio = document.querySelectorAll('h2');
