@@ -66,7 +66,7 @@ Punto bonus: si hay inputs vacíos, ignorarlos en el cálculo (no contarlos como
     borrarTodo.addEventListener("click",function(e){
         let i = 0;
         while(cantidadActual>=i){ 
-                del();
+                deleteFamilyMember();
                 cantidadActual--;
         }
         integrantes.value = 0;
@@ -76,38 +76,37 @@ Punto bonus: si hay inputs vacíos, ignorarlos en el cálculo (no contarlos como
         cantidadActual = integrantes.value;
         if(cantidadActual>cantidadVieja){
             while(cantidadVieja!=cantidadActual){ 
-                add();
+                addFamilyMember();
                 cantidadVieja++;
             }
         }else{
             while(cantidadVieja!=cantidadActual){ 
-                del();
+                deleteFamilyMember();
                 cantidadVieja--;
             }
         } 
     })
 
-    function add(){
+    function addFamilyMember(){
         const div = document.createElement("div");
         div.className = "datos-personas"
         const formulario = document.getElementById("formulario");
         formulario.appendChild(div);
         const pushData = document.getElementsByClassName("datos-personas");
-        const l = document.createElement("label");
+        const $label = document.createElement("label");
         const text = document.createTextNode("Cuanto gana anual?");
-        l.appendChild(text);
-        l.style = "display:block";
-        const i = document.createElement("input");
-        i.style = "display:block , justify-content: center";
-        i.className = "edades";
-        i.type = "number";
-        pushData[pushData.length-1].appendChild(l);
-        pushData[pushData.length-1].appendChild(i);
+        $label.appendChild(text);
+        $label.style = "display:block";
+        const $input = document.createElement("input");
+        $input.className = "edades";
+        $input.type = "number";
+        pushData[pushData.length-1].appendChild($label);
+        pushData[pushData.length-1].appendChild($input);
     }
-    function del(){
-        const e = document.getElementById("formulario"); 
-        if(e.children.length>1){
-            e.removeChild(e.lastChild);
+    function deleteFamilyMember(){
+        const $formulario = document.getElementById("formulario"); 
+        if($formulario.children.length>1){
+            $formulario.removeChild($formulario.lastChild);
         }
     }
 
