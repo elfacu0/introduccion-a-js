@@ -8,53 +8,51 @@ Punto bonus: si hay inputs vacíos, ignorarlos en el cálculo (no contarlos como
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="\node_modules\bootstrap\dist\css\bootstrap.min.css">
     <title>K</title>
 </head>
 <style>
-    .botones{
-        display: flex;
-        justify-content: center;
-    }
-    .botones > input{
-        margin: 10px;
-    }
-    #divisores{
-        display: flex;
-    }
-    #todo{
-        text-align:center;
-        float: right;
-    }
-    .datos{
-        float: left;
-    }
-    ul > *{
-        justify-content: center;
-        text-align:center
+    input{
+        text-align: center;
     }
 </style>
-<body>
-    <div id="divisor">
-        <div class="datos">
-            <h1>El que mas gana: </h1>
-            <h2>El promedio anual es : </h2>
-            <h2>El promedio mensual es : </h2>
-            <h3>El que menos gana: </h3>
+
+<body style="background-color: aquamarine; margin-top: 3%;">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm bg-success">
+                <h1>El que mas gana: </h1>
+                <h2>El promedio anual es : </h2>
+                <h2>El promedio mensual es : </h2>
+                <h3>El que menos gana: </h3>
+            </div>
+            <div class="col-sm table-dark">
+                <form id="todo">
+                    <div class="form-group">
+                        <ul id="formulario" class="col-sm">
+                            <div class="row justify-content-center">
+                                <label>Integrantes de la familia</label>
+                                <input id="family" type="number" min="0">
+                                <div id="formu">
+
+                                </div>
+                            </div>
+                        </ul>
+                        <div class="botones row">
+                            <div class="col-sm d-flex justify-content-around">
+                                <input type="button" class="btn btn-primary" id="submit" value="Calcular">
+                                <input type="button" class="btn btn-danger" id="deleteAll" value="Borra todo">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
-        <form id="todo">
-            <ul id="formulario">
-                <label>Integrantes de la familia</label>
-                <input id="family" type="number" min ="0">
-            </ul>
-        <div class="botones">
-            <input type="button" id="submit" value="Calcular">
-            <input type="button" id="deleteAll" value="Borra todo">
-        </div>
-        </form>
     </div>
 </body>
 <script>
@@ -62,90 +60,94 @@ Punto bonus: si hay inputs vacíos, ignorarlos en el cálculo (no contarlos como
     let cantidadActual = 0;
     const integrantes = document.getElementById("family");
     const borrarTodo = document.getElementById("deleteAll");
-    const calcular = document.getElementById("submit"); 
-    borrarTodo.addEventListener("click",function(e){
-        while(cantidadActual>=0){ 
-                deleteFamilyMember();
-                cantidadActual--;
+    const calcular = document.getElementById("submit");
+    borrarTodo.addEventListener("click", function (e) {
+        while (cantidadActual >= 0) {
+            deleteFamilyMember();
+            cantidadActual--;
         }
         integrantes.value = 0;
-        modifyData("","","");
+        cantidadActual = 0;
+        cantidadVieja = 0;
+        modifyData("", "", "");
     })
-    integrantes.addEventListener("change",function(e){
+    integrantes.addEventListener("change", function (e) {
         cantidadActual = integrantes.value;
-        if(cantidadActual>cantidadVieja){
-            while(cantidadVieja!=cantidadActual){ 
+        if (cantidadActual > cantidadVieja) {
+            while (cantidadVieja != cantidadActual) {
                 addFamilyMember();
                 cantidadVieja++;
             }
-        }else{
-            while(cantidadVieja!=cantidadActual){ 
+        } else {
+            while (cantidadVieja != cantidadActual) {
                 deleteFamilyMember();
                 cantidadVieja--;
             }
-        } 
+        }
     })
 
-    function addFamilyMember(){
+    function addFamilyMember() {
         const div = document.createElement("div");
-        div.className = "datos-personas"
-        const formulario = document.getElementById("formulario");
+        div.className = "datos-personas row justify-content-center"
+        const formulario = document.getElementById("formu");
         formulario.appendChild(div);
         const pushData = document.getElementsByClassName("datos-personas");
         const $label = document.createElement("label");
-        const text = document.createTextNode("Cuanto gana anual?");
+        const text = document.createTextNode("Cuanto Gana Anualmente?");
         $label.appendChild(text);
-        $label.style = "display:block";
+        $label.style = "display:block row justify-content-center";
         const $input = document.createElement("input");
-        $input.className = "edades";
+        $input.className = "edades col-12 input-group-text";
         $input.type = "number";
-        pushData[pushData.length-1].appendChild($label);
-        pushData[pushData.length-1].appendChild($input);
+        $input.min = 0;
+        pushData[pushData.length - 1].appendChild($label);
+        pushData[pushData.length - 1].appendChild($input);
     }
-    function deleteFamilyMember(){
-        const $formulario = document.getElementById("formulario"); 
-        if($formulario.children.length>1){
+    function deleteFamilyMember() {
+        const $formulario = document.getElementById("formu");
+        if ($formulario.children.length > 0) {
             $formulario.removeChild($formulario.lastChild);
         }
     }
 
-    calcular.addEventListener("click",function(e){
+    calcular.addEventListener("click", function (e) {
         const total = document.getElementsByClassName("edades");
         let suma = 0;
         let min = null;
         let max = 0;
         let validos = 0;
-        for(let i = 0 ; i<total.length;i++){ 
+        for (let i = 0; i < total.length; i++) {
             let ti = Number(total[i].value);
-            if(ti>0){
+            if (ti > 0) {
                 suma += ti;
-                if(ti>max){
+                if (ti > max) {
                     max = ti;
                 }
-                if(ti<min || min==null){
+                if (ti < min || min == null) {
                     min = ti;
                 }
                 validos++;
             }
         }
-        if(validos>=1){
-            const prom = suma/validos;
-            modifyData(max,prom,min);
-        }else{
+        if (validos >= 1) {
+            const prom = suma / validos;
+            modifyData(max, prom, min);
+        } else {
             alert("completa algun campo capo");
         }
     });
 
-    function modifyData(max,prom,min){
+    function modifyData(max, prom, min) {
         const grande = document.querySelector('h1');
         grande.innerHTML = `El que mas gana: $${max}`;
         const promedio = document.querySelectorAll('h2');
         promedio[0].innerHTML = `El promedio anual : $${prom}`;
         const promedio2 = document.querySelectorAll('h2');
-        promedio2[1].innerHTML = `El promedio mensual es : $${prom/12}`;
+        promedio2[1].innerHTML = `El promedio mensual es : $${prom / 12}`;
         const chico = document.querySelector('h3');
-        chico.innerHTML = `El mas chico : $${min}`;
+        chico.innerHTML = `El que menos gana: $${min}`;
     }
-    
+
 </script>
+
 </html>
